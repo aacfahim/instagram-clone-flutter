@@ -1,8 +1,12 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:instagram_clone/resources/auth_methods.dart';
 import 'package:instagram_clone/utils/colors.dart';
 import 'package:instagram_clone/widgets/textfield_input.dart';
+
+import '../utils/utils.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -16,6 +20,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController bioController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
+  Uint8List? _image;
 
   @override
   void dispose() {
@@ -24,6 +29,13 @@ class _SignupScreenState extends State<SignupScreen> {
     bioController.dispose();
     usernameController.dispose();
     super.dispose();
+  }
+
+  void selectImage() async {
+    Uint8List img = await pickImage(ImageSource.gallery);
+    setState(() {
+      _image = img;
+    });
   }
 
   @override
@@ -48,16 +60,23 @@ class _SignupScreenState extends State<SignupScreen> {
                 //circular widget to accept and show selected file
                 Stack(
                   children: [
-                    CircleAvatar(
-                      radius: 60,
-                      backgroundImage: NetworkImage(
-                          "https://piceditorreview.com/wp-content/uploads/2021/10/Insta-pic.jpg"),
-                    ),
+                    _image != null
+                        ? CircleAvatar(
+                            radius: 60,
+                            backgroundImage: MemoryImage(_image!),
+                          )
+                        : CircleAvatar(
+                            radius: 60,
+                            backgroundImage: NetworkImage(
+                                "https://www.vivekchatana.in/media/member/360_F_109006426_388PagqielgjFTAMgW59jRaDmPJvSBUL.jpg"),
+                          ),
                     Positioned(
                       bottom: -10,
                       left: 80,
                       child: IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          selectImage();
+                        },
                         icon: Icon(
                           Icons.add_a_photo,
                           color: Colors.white,
@@ -102,10 +121,12 @@ class _SignupScreenState extends State<SignupScreen> {
                       InkWell(
                         onTap: () async {
                           String res = await AuthMethods().signUpUser(
-                              email: emailController.text,
-                              password: passwordController.text,
-                              username: usernameController.text,
-                              bio: bioController.text);
+                            email: emailController.text,
+                            password: passwordController.text,
+                            username: usernameController.text,
+                            bio: bioController.text,
+                            file: _image!,
+                          );
 
                           print(res);
                         },
