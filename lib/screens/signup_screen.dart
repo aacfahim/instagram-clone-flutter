@@ -85,6 +85,13 @@ class _SignupScreenState extends State<SignupScreen> {
                       isPass: true),
 
                   SizedBox(height: 20),
+                  // bio field
+                  TextFieldInput(
+                      hintText: "Bio",
+                      textEditingController: bioController,
+                      textInputType: TextInputType.text),
+
+                  SizedBox(height: 20),
                   //login button
                   Container(
                     child: Text("Log in"),
