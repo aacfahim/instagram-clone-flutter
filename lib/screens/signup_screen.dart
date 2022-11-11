@@ -21,6 +21,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController bioController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
   Uint8List? _image;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -36,6 +37,28 @@ class _SignupScreenState extends State<SignupScreen> {
     setState(() {
       _image = img;
     });
+  }
+
+  signUpUser() async {
+    setState(() {
+      _isLoading = true;
+    });
+    String res = await AuthMethods().signUpUser(
+      email: emailController.text,
+      password: passwordController.text,
+      username: usernameController.text,
+      bio: bioController.text,
+      file: _image!,
+    );
+    setState(() {
+      _isLoading = false;
+    });
+
+    if (res != 'successful') {
+      showSnackBar(res, context);
+    }
+
+    print(res);
   }
 
   @override
@@ -117,31 +140,25 @@ class _SignupScreenState extends State<SignupScreen> {
                           textInputType: TextInputType.text),
 
                       SizedBox(height: 20),
-                      //login button
+                      //sign up button
                       InkWell(
-                        onTap: () async {
-                          String res = await AuthMethods().signUpUser(
-                            email: emailController.text,
-                            password: passwordController.text,
-                            username: usernameController.text,
-                            bio: bioController.text,
-                            file: _image!,
-                          );
-
-                          print(res);
+                        onTap: () {
+                          signUpUser();
                         },
-                        child: Container(
-                          child: Text("Log in"),
-                          width: double.infinity,
-                          alignment: Alignment.center,
-                          padding: EdgeInsets.symmetric(vertical: 10),
-                          decoration: ShapeDecoration(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4.0),
-                            ),
-                            color: blueColor,
-                          ),
-                        ),
+                        child: _isLoading
+                            ? Center(child: CircularProgressIndicator())
+                            : Container(
+                                child: Text("Sign up"),
+                                width: double.infinity,
+                                alignment: Alignment.center,
+                                padding: EdgeInsets.symmetric(vertical: 10),
+                                decoration: ShapeDecoration(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(4.0),
+                                  ),
+                                  color: blueColor,
+                                ),
+                              ),
                       ),
                       SizedBox(height: 15),
                       Flexible(child: Container(), flex: 2),

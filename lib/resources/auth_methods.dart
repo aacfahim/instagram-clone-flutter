@@ -49,7 +49,7 @@ class AuthMethods {
           'photoUrl': photoUrl,
         });
 
-        return res = "User Added Successfully";
+        return res = "successful";
       }
     } on FirebaseAuthException catch (err) {
       if (err.code == 'invalid-email') {
