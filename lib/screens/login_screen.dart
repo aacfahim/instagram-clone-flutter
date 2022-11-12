@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:instagram_clone/main.dart';
+import 'package:instagram_clone/resources/auth_methods.dart';
 import 'package:instagram_clone/utils/colors.dart';
+import 'package:instagram_clone/utils/utils.dart';
 import 'package:instagram_clone/widgets/textfield_input.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -16,12 +15,35 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  bool _isLoading = false;
 
   @override
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
+  }
+
+  void loginUser() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    String res = await AuthMethods().loginUser(
+        email: emailController.text, password: passwordController.text);
+
+    if (res == "successful") {
+      setState(() {
+        _isLoading = false;
+      });
+      // transition to next page
+      showSnackBar(res, context);
+    } else {
+      setState(() {
+        _isLoading = false;
+      });
+      showSnackBar(res, context);
+    }
   }
 
   @override
@@ -57,17 +79,22 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   SizedBox(height: 20),
                   //login button
-                  Container(
-                    child: Text("Log in"),
-                    width: double.infinity,
-                    alignment: Alignment.center,
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    decoration: ShapeDecoration(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4.0),
-                      ),
-                      color: blueColor,
-                    ),
+                  InkWell(
+                    onTap: () => loginUser(),
+                    child: _isLoading
+                        ? Center(child: CircularProgressIndicator())
+                        : Container(
+                            child: Text("Log in"),
+                            width: double.infinity,
+                            alignment: Alignment.center,
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            decoration: ShapeDecoration(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4.0),
+                              ),
+                              color: blueColor,
+                            ),
+                          ),
                   ),
                   SizedBox(height: 15),
                   Flexible(child: Container(), flex: 2),
