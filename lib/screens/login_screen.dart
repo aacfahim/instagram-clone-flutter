@@ -36,8 +36,11 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         _isLoading = false;
       });
-      // transition to next page
-      showSnackBar(res, context);
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => LoginScreen(),
+          ));
     } else {
       setState(() {
         _isLoading = false;
