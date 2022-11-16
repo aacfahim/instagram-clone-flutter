@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:instagram_clone/resources/auth_methods.dart';
+import 'package:instagram_clone/responsive/mobile_screen_layout.dart';
+import 'package:instagram_clone/responsive/responsive_layout_screen.dart';
+import 'package:instagram_clone/responsive/web_screen_layout.dart';
+import 'package:instagram_clone/screens/signup_screen.dart';
 import 'package:instagram_clone/utils/colors.dart';
 import 'package:instagram_clone/utils/utils.dart';
 import 'package:instagram_clone/widgets/textfield_input.dart';
@@ -36,17 +40,24 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         _isLoading = false;
       });
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => LoginScreen(),
-          ));
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) => ResponsiveLayout(
+          webScreenLayout: WebScreenLayout(),
+          mobileScreenLayout: MobileScreenLayout(),
+        ),
+      ));
     } else {
       setState(() {
         _isLoading = false;
       });
       showSnackBar(res, context);
     }
+  }
+
+  void navigateToSignup() {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => SignupScreen(),
+    ));
   }
 
   @override
@@ -106,16 +117,15 @@ class _LoginScreenState extends State<LoginScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      InkWell(
-                        onTap: () {},
-                        child: Container(
-                          padding: EdgeInsets.symmetric(vertical: 8),
-                          child: Text("Don't have an account?"),
-                        ),
+                      Container(
+                        padding: EdgeInsets.symmetric(vertical: 8),
+                        child: Text("Don't have an account?"),
                       ),
                       SizedBox(width: 10),
                       InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          navigateToSignup();
+                        },
                         child: Container(
                           padding: EdgeInsets.symmetric(vertical: 8),
                           child: Text("Sign up",

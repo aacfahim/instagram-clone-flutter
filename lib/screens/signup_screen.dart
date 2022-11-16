@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:instagram_clone/resources/auth_methods.dart';
+import 'package:instagram_clone/responsive/mobile_screen_layout.dart';
+import 'package:instagram_clone/responsive/responsive_layout_screen.dart';
+import 'package:instagram_clone/responsive/web_screen_layout.dart';
+import 'package:instagram_clone/screens/login_screen.dart';
 import 'package:instagram_clone/utils/colors.dart';
 import 'package:instagram_clone/widgets/textfield_input.dart';
 
@@ -54,11 +58,24 @@ class _SignupScreenState extends State<SignupScreen> {
       _isLoading = false;
     });
 
-    if (res != 'successful') {
+    if (res == 'successful') {
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => ResponsiveLayout(
+          webScreenLayout: WebScreenLayout(),
+          mobileScreenLayout: MobileScreenLayout(),
+        ),
+      ));
+    } else {
       showSnackBar(res, context);
     }
 
     print(res);
+  }
+
+  void navigateToSignin() {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => LoginScreen(),
+    ));
   }
 
   @override
@@ -90,8 +107,8 @@ class _SignupScreenState extends State<SignupScreen> {
                           )
                         : CircleAvatar(
                             radius: 60,
-                            backgroundImage: NetworkImage(
-                                "https://www.vivekchatana.in/media/member/360_F_109006426_388PagqielgjFTAMgW59jRaDmPJvSBUL.jpg"),
+                            backgroundImage:
+                                AssetImage("assets/default_profile.jpg"),
                           ),
                     Positioned(
                       bottom: -10,
@@ -112,6 +129,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 Expanded(
                   flex: 3,
                   child: ListView(
+                    shrinkWrap: true,
                     children: [
                       //username field
                       TextFieldInput(
@@ -173,7 +191,9 @@ class _SignupScreenState extends State<SignupScreen> {
                           ),
                           SizedBox(width: 5),
                           InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              navigateToSignin();
+                            },
                             child: Container(
                               padding: EdgeInsets.symmetric(vertical: 10),
                               child: Text("Sign in",
