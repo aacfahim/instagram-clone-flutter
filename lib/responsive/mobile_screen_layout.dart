@@ -24,6 +24,12 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
     pageController.jumpToPage(page);
   }
 
+  void onPageChanged(int page) {
+    setState(() {
+      _page = page;
+    });
+  }
+
   @override
   void initState() {
     pageController = PageController();
@@ -32,7 +38,6 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     pageController.dispose();
   }
@@ -47,13 +52,14 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
           Center(child: Text("page 2 ")),
           Center(child: Text("page 3 ")),
           Center(child: Text("page 4 ")),
-          Center(child: Text("page 4 ")),
           Center(child: Text("page 5 ")),
         ],
         controller: pageController,
+        onPageChanged: onPageChanged,
       ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: mobileBackgroundColor,
+        type: BottomNavigationBarType.fixed,
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home,
