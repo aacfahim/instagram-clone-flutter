@@ -54,6 +54,7 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
           Center(child: Text("page 4 ")),
           Center(child: Text("page 5 ")),
         ],
+        physics: NeverScrollableScrollPhysics(),
         controller: pageController,
         onPageChanged: onPageChanged,
       ),
